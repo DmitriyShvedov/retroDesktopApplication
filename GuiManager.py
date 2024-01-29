@@ -1,5 +1,7 @@
+import pdb
+
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QFileDialog, QComboBox, QLineEdit, QListWidget, \
-    QListWidgetItem
+    QListWidgetItem, QApplication
 import XmlManager
 from Data import FilterFields
 from GameManager import GameManager
@@ -37,11 +39,14 @@ class GuiManager(QWidget):
         return f"ID:Name: {self.name}"
 
     def init_ui(self):
-        self.setWindowTitle('Мое кроссплатформенное приложение')
+        self.setWindowTitle('OLD SCHOOL')
         self.open_xml_button = QPushButton('Открыть файл XML')
 
         self.layout = QVBoxLayout(self)
         self.layout.addWidget(self.open_xml_button)
+
+        self.setGeometry(100, 100, 300, 300)  # Установите размер окна
+        self.center()  # Вызов метода для центрирования
 
         self.name_field = QLineEdit()
         self.region_field = QLineEdit()
@@ -57,6 +62,17 @@ class GuiManager(QWidget):
         self.path_field = QLineEdit()
 
         self.open_xml_button.clicked.connect(self.open_file_button)
+
+    def center(self):
+        # Получим геометрию основного экрана
+        screen_geometry = QApplication.desktop().screenGeometry()
+
+        # Вычислим центральные координаты окна
+        x = (screen_geometry.width() - self.width()) // 2
+        y = (screen_geometry.height() - self.height()) // 2
+
+        # Установим окно по центру
+        self.move(x, y)
 
     def open_file_button(self):
         file_dialog = QFileDialog()
@@ -116,6 +132,7 @@ class GuiManager(QWidget):
 
         # Находим соответствующий экземпляр Game по имени из списка
         selected_game = next((game for game in self.original_games if game.name == item.text().strip()), None)
+
         if selected_game:
             self.selected_game_id = selected_game.id
             self.name_field.setText(selected_game.name)
@@ -148,7 +165,11 @@ class GuiManager(QWidget):
             self.layout.addWidget(self.description_field)
             self.layout.addWidget(self.path_field)
 
+        if self.save_button:
+            self.save_button.clicked.disconnect(self.save_changes)
+
         self.add_save_changes_button()
+        self.save_button.clicked.connect(self.save_changes)
 
     def clear_layout(self):
         for i in reversed(range(self.layout.count())):
@@ -171,8 +192,6 @@ class GuiManager(QWidget):
         if self.layout.indexOf(self.save_button) == -1:
             self.save_button = QPushButton('Сохранить изменения')
             self.layout.addWidget(self.save_button)
-        # Создаем кнопку "Сохранить изменнеия"
-        self.save_button.clicked.connect(self.save_changes)
 
     def save_changes(self):
 
@@ -183,7 +202,7 @@ class GuiManager(QWidget):
         edited_publisher = self.publisher_field.text()
         edited_developer = self.developer_field.text()
         edited_genre = self.genre_field.text()
-        edited_desc = self.genre_field.text()
+        edited_desc = self.description_field.text()
 
         # Находим соответствующий экземпляр Game по имени из списка
         selected_game = next((game for game in self.original_games if game.id == self.selected_game_id), None)
