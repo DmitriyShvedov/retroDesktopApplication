@@ -1,7 +1,7 @@
 import pdb
 
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QFileDialog, QComboBox, QLineEdit, QListWidget, \
-    QListWidgetItem, QApplication
+    QListWidgetItem, QApplication, QHBoxLayout
 import XmlManager
 from Data import FilterFields
 from GameManager import GameManager
@@ -29,6 +29,7 @@ class GuiManager(QWidget):
         self.game_list_widget = None
         self.open_xml_button = None
         self.layout = None
+        self.input_layout = None
         self.game_manager = game_manager
         self.filter_fields_combo = None
         self.filter_value_input = None
@@ -46,7 +47,9 @@ class GuiManager(QWidget):
         self.layout.addWidget(self.open_xml_button)
 
         self.setGeometry(100, 100, 300, 300)  # Установите размер окна
-        self.center()  # Вызов метода для центрирования
+        self.center()
+
+        self.input_layout = QHBoxLayout()
 
         self.name_field = QLineEdit()
         self.region_field = QLineEdit()
@@ -88,6 +91,7 @@ class GuiManager(QWidget):
             self.add_filter_value_field()
             self.add_search_button()
             self.add_widget_search_list()
+            self.center()
 
     def show_filtered_games(self):
         selected_field = self.filter_fields_combo.currentText().lower()
@@ -106,6 +110,7 @@ class GuiManager(QWidget):
         self.game_list_widget.itemClicked.connect(self.on_item_clicked)
 
     def on_item_clicked(self, item):
+        self.showMaximized()  # Вызов метода для центрирования
         # Очищаем текущее значение QLineEdit
         self.name_field.clear()
         self.region_field.clear()

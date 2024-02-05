@@ -11,7 +11,23 @@ def read_xml(xml_path):
     for game_element in root.findall('game'):
         game_object = Game(game_element)
         games_list.append(game_object)
+
+    get_regions(xml_path)
     return games_list
+
+
+def get_regions(xml_path):
+    tree = ET.parse(xml_path)
+    root = tree.getroot()
+    all_region_list = []
+    for game_element in root.findall('game'):
+        region = game_element.find("region")
+        if region is not None:
+            temp = region.text
+            all_region_list.append(temp)
+
+    region_list = list(dict.fromkeys(all_region_list))
+    return region_list
 
 
 def write_xml_changes(game):
@@ -34,8 +50,6 @@ def write_xml_changes(game):
             game_element.find('developer').text = game.developer
             game_element.find('genre').text = game.genre
             game_element.find('desc').text = game.desc
-
-
 
     # Записываем изменения обратно в XML-файл
     tree.write(file_path)
