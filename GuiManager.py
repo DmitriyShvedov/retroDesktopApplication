@@ -1,5 +1,6 @@
 import pdb
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QFileDialog, QComboBox, QLineEdit, QListWidget, \
     QListWidgetItem, QApplication, QHBoxLayout
 import XmlManager
@@ -34,6 +35,7 @@ class GuiManager(QWidget):
         self.game_manager = game_manager
         self.filter_fields_combo = None
         self.filter_value_input = None
+        self.file_path = None
 
         self.init_ui()
 
@@ -53,7 +55,7 @@ class GuiManager(QWidget):
         self.input_layout = QHBoxLayout()
 
         self.name_field = QLineEdit()
-        self.region_field = QLineEdit()
+        self.region_field = QComboBox()
         self.players_field = QLineEdit()
         self.rating_field = QLineEdit()
         self.kid_game_field = QLineEdit()
@@ -67,23 +69,12 @@ class GuiManager(QWidget):
 
         self.open_xml_button.clicked.connect(self.open_file_button)
 
-    def center(self):
-        # Получим геометрию основного экрана
-        screen_geometry = QApplication.desktop().screenGeometry()
-
-        # Вычислим центральные координаты окна
-        x = (screen_geometry.width() - self.width()) // 2
-        y = (screen_geometry.height() - self.height()) // 2
-
-        # Установим окно по центру
-        self.move(x, y)
-
     def open_file_button(self):
         file_dialog = QFileDialog()
-        file_path, _ = file_dialog.getOpenFileName(self, 'Открыть файл XML', '', 'XML Files (*.xml)')
+        self.file_path, _ = file_dialog.getOpenFileName(self, 'Открыть файл XML', '', 'XML Files (*.xml)')
 
-        if file_path:
-            xml_data = XmlManager.read_xml(file_path)
+        if self.file_path:
+            xml_data = XmlManager.read_xml(self.file_path)
             self.original_games = xml_data  # Сохраняем оригинальные данные
             self.game_manager = GameManager(xml_data)
             self.clear_layout()  # Очистить текущий макет
@@ -142,7 +133,17 @@ class GuiManager(QWidget):
         if selected_game:
             self.selected_game_id = selected_game.id
             self.name_field.setText(selected_game.name)
-            self.region_field.setText(selected_game.region)
+
+            # Очищаем текущий список значений и добавляем новые элементы из регионов
+            self.region_field.clear()
+            regions = XmlManager.get_regions(self.file_path)
+            for region in regions:
+                self.region_field.addItem(region)
+
+            # Устанавливаем текущий регион выбранной игры
+            index = self.region_field.findData(selected_game.region, Qt.DisplayRole)
+            self.region_field.setCurrentIndex(index)
+
             self.players_field.setText(selected_game.players)
             self.rating_field.setText(selected_game.rating)
             self.publisher_field.setText(selected_game.publisher)
@@ -202,7 +203,7 @@ class GuiManager(QWidget):
     def save_changes(self):
 
         edited_name = self.name_field.text()
-        edited_region = self.region_field.text()
+        edited_region = self.region_field.currentText()
         edited_players = self.players_field.text()
         edited_rating = self.rating_field.text()
         edited_publisher = self.publisher_field.text()
@@ -241,3 +242,14 @@ class GuiManager(QWidget):
         for field in FilterFields:
             self.filter_fields_combo.addItem(field.value)
         self.layout.addWidget(self.filter_fields_combo)
+
+    def center(self):
+        # Получим геометрию основного экрана
+        screen_geometry = QApplication.desktop().screenGeometry()
+
+        # Вычислим центральные координаты окна
+        x = (screen_geometry.width() - self.width()) // 2
+        y = (screen_geometry.height() - self.height()) // 2
+
+        # Установим окно по центру
+        self.move(x, y)
