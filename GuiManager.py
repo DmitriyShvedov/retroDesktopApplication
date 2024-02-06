@@ -8,6 +8,7 @@ from GameManager import GameManager
 
 
 class GuiManager(QWidget):
+
     def __init__(self, game_manager):
         super().__init__()
         self.path_field = None
