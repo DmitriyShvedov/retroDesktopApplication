@@ -1,8 +1,9 @@
 import pdb
 
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QTextOption
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QFileDialog, QComboBox, QLineEdit, QListWidget, \
-    QListWidgetItem, QApplication, QHBoxLayout, QGridLayout, QSizePolicy
+    QListWidgetItem, QApplication, QHBoxLayout, QGridLayout, QSizePolicy, QTextEdit
 import XmlManager
 from Data import FilterFields
 from GameManager import GameManager
@@ -67,7 +68,7 @@ class GuiManager(QWidget):
         self.publisher_field = QLineEdit()
         self.developer_field = QLineEdit()
         self.genre_field = QLineEdit()
-        self.description_field = QLineEdit()
+        self.description_field = QTextEdit()
         self.path_field = QLineEdit()
 
         self.save_button = QPushButton('Сохранить изменения')  # добавьте эту строку
@@ -175,8 +176,11 @@ class GuiManager(QWidget):
             self.hbox.addWidget(genre_label, 12, 1)
             self.hbox.addWidget(self.genre_field, 13, 1)
             self.hbox.addWidget(description_label, 14, 1)
-            self.hbox.addWidget(self.description_field, 15, 1, 5, 5)
-            self.hbox.addWidget(self.path_field, 16, 1)
+            self.hbox.addWidget(self.description_field, 15, 1, 5, 1)
+            # Установка фиксированной ширины
+            self.description_field.setFixedHeight(100)
+            self.description_field.setWordWrapMode(QTextOption.WordWrap)
+            # self.hbox.addWidget(self.path_field, 16, 1)
 
         if self.save_button:
             self.save_button.clicked.disconnect(self.save_changes)
@@ -196,7 +200,7 @@ class GuiManager(QWidget):
     def add_widget_search_list(self):
         # Создаем виджет для отображения списка найденных игр
         self.game_list_widget = QListWidget(self)
-        self.hbox.addWidget(self.game_list_widget, 3, 0, 10, 1)
+        self.hbox.addWidget(self.game_list_widget, 3, 0, 25, 1)
 
     def add_search_button(self):
         # Создаем кнопку "Найти"
@@ -208,7 +212,7 @@ class GuiManager(QWidget):
     def add_save_changes_button(self):
         if self.hbox.indexOf(self.save_button) == -1:
             self.save_button = QPushButton('Сохранить изменения')
-            self.hbox.addWidget(self.save_button)
+            self.hbox.addWidget(self.save_button, 27, 1)
 
     def save_changes(self):
 
@@ -219,7 +223,7 @@ class GuiManager(QWidget):
         edited_publisher = self.publisher_field.text()
         edited_developer = self.developer_field.text()
         edited_genre = self.genre_field.text()
-        edited_desc = self.description_field.text()
+        edited_desc = self.description_field.toPlainText()
 
         # Находим соответствующий экземпляр Game по имени из списка
         selected_game = next((game for game in self.original_games if game.id == self.selected_game_id), None)
