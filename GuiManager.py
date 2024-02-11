@@ -2,7 +2,7 @@ import pdb
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QFileDialog, QComboBox, QLineEdit, QListWidget, \
-    QListWidgetItem, QApplication, QHBoxLayout, QGridLayout
+    QListWidgetItem, QApplication, QHBoxLayout, QGridLayout, QSizePolicy
 import XmlManager
 from Data import FilterFields
 from GameManager import GameManager
@@ -51,7 +51,7 @@ class GuiManager(QWidget):
         self.center()
 
         self.hbox = QGridLayout()
-        self.hbox.setSpacing(5)
+        self.hbox.setSpacing(10)
 
         self.hbox.addWidget(self.open_xml_button, 1, 0)
 
@@ -88,13 +88,13 @@ class GuiManager(QWidget):
             self.add_filter_list_fields()
             self.add_filter_value_field()
             self.add_search_button()
-            self.add_widget_search_list()
             self.center()
 
     def show_filtered_games(self):
         selected_field = self.filter_fields_combo.currentText().lower()
         filter_value = self.filter_value_input.text()
 
+        self.add_widget_search_list()
         self.game_list_widget.clear()
 
         # Применяем фильтрацию к оригинальным данным
@@ -196,13 +196,14 @@ class GuiManager(QWidget):
     def add_widget_search_list(self):
         # Создаем виджет для отображения списка найденных игр
         self.game_list_widget = QListWidget(self)
-        self.hbox.addWidget(self.game_list_widget, 3, 0, 4, 1)
+        self.hbox.addWidget(self.game_list_widget, 3, 0, 10, 1)
 
     def add_search_button(self):
         # Создаем кнопку "Найти"
         self.find_button = QPushButton('Найти')
         self.hbox.addWidget(self.find_button)
         self.find_button.clicked.connect(self.show_filtered_games, 0, 2)
+
 
     def add_save_changes_button(self):
         if self.hbox.indexOf(self.save_button) == -1:
