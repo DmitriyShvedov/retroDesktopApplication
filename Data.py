@@ -13,8 +13,6 @@ class FilterFields(Enum):
     MISSING_DESCRIPTION = 'Missing Description'
     MISSING_GENRE = 'Missing Genre'
     MISSING_REGION = 'Missing Region'
-    KID_GAME = 'Kid Game'
-    HIDDEN = 'Hidden'
     FAVORITE = 'Favorite'
     NAME = 'Name'
     RATING = 'Rating'
