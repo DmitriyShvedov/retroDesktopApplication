@@ -7,7 +7,7 @@ class Game:
         self.image = xml_element.findtext("image")
         self.video = xml_element.findtext("video")
         self.rating = xml_element.findtext("rating")
-        self.releaseDate = xml_element.findtext("releaseDate")
+        self.releaseDate = xml_element.findtext("releasedate")
         self.developer = xml_element.findtext("developer")
         self.publisher = xml_element.findtext("publisher")
         self.genre = xml_element.findtext("genre")

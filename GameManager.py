@@ -16,6 +16,56 @@ class GameManager:
                     if isinstance(attr_value, str) and value in attr_value:
                         filtered_games.append(game)
                         break
+        elif field == "missing region":
+            for game in self.games:
+                if getattr(game, "region") is None:
+                    filtered_games.append(game)
+
+        elif field == "missing developer":
+            for game in self.games:
+                if getattr(game, "developer") is None:
+                    filtered_games.append(game)
+
+        elif field == "missing publisher":
+            for game in self.games:
+                if getattr(game, "publisher") is None:
+                    filtered_games.append(game)
+
+        elif field == "missing genre":
+            for game in self.games:
+                if getattr(game, "genre") is None:
+                    filtered_games.append(game)
+
+        elif field == "missing rating":
+            for game in self.games:
+                if getattr(game, "rating") is None:
+                    filtered_games.append(game)
+
+        elif field == "missing number of players":
+            for game in self.games:
+                if getattr(game, "players") is None:
+                    filtered_games.append(game)
+
+        elif field == "missing picture":
+            for game in self.games:
+                if getattr(game, "image") is None:
+                    filtered_games.append(game)
+
+        elif field == "missing video":
+            for game in self.games:
+                if getattr(game, "video") is None:
+                    filtered_games.append(game)
+
+        elif field == "missing date":
+            for game in self.games:
+                if getattr(game, "releasedate") is None:
+                    filtered_games.append(game)
+
+        elif field == "missing description":
+            for game in self.games:
+                if getattr(game, "desc") is None:
+                    filtered_games.append(game)
+
         else:
             for game in self.games:
                 if hasattr(game, field):
