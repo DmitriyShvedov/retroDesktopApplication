@@ -11,15 +11,17 @@ class GameManager:
         """Фильтрует игры по указанному полю и значению."""
         filtered_games = []
         if field == 'all':
-            # TO DOO !!!!!!
             for game in self.games:
-                match = all(getattr(game, game_field) == game_value for game_field, game_value in vars(game).items())
-                if match:
-                    filtered_games.append(game)
+                for attr, attr_value in game.__dict__.items():
+                    if isinstance(attr_value, str) and value in attr_value:
+                        filtered_games.append(game)
+                        break
         else:
             for game in self.games:
-                if getattr(game, field) == value:
-                    filtered_games.append(game)
+                if hasattr(game, field):
+                    attr_value = getattr(game, field)
+                    if isinstance(attr_value, str) and value in attr_value:
+                        filtered_games.append(game)
         self.games = filtered_games
 
 
