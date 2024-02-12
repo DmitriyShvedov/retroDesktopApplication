@@ -23,4 +23,3 @@ class FilterFields(Enum):
     PUBLISHER = 'Publisher'
     DEVELOPER = 'Developer'
     DESCRIPTION = 'Desc'
-

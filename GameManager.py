@@ -1,7 +1,3 @@
-from typing import List
-
-import Game
-
 
 class GameManager:
     def __init__(self, xml_data):
@@ -56,10 +52,10 @@ class GameManager:
                 if getattr(game, "video") is None:
                     filtered_games.append(game)
 
-        elif field == "missing date":
-            for game in self.games:
-                if getattr(game, "releasedate") is None:
-                    filtered_games.append(game)
+       # elif field == "missing date":
+            #for game in self.games:
+               # if getattr(game, "releasedate") is None:
+                 #   filtered_games.append(game)
 
         elif field == "missing description":
             for game in self.games:
