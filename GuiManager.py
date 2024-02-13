@@ -1,10 +1,12 @@
-
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QTextOption
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QFileDialog, QComboBox, QLineEdit, QListWidget, \
     QListWidgetItem, QApplication, QHBoxLayout, QGridLayout, QSizePolicy, QTextEdit
+
+import Game
 import XmlManager
 from Data import FilterFields
+
 from GameManager import GameManager
 
 
@@ -26,6 +28,7 @@ class GuiManager(QWidget):
         self.save_button = None
         self.name_field = None
         self.region_field = None
+        self.release_date = None
         self.players_field = None
         self.find_button = None
         self.original_games = None
@@ -64,6 +67,7 @@ class GuiManager(QWidget):
         self.kid_game_field = QLineEdit()
         self.hidden_field = QLineEdit()
         self.favorite_field = QLineEdit()
+        self.release_date = QLineEdit()
         self.publisher_field = QLineEdit()
         self.developer_field = QLineEdit()
         self.genre_field = QLineEdit()
@@ -116,6 +120,7 @@ class GuiManager(QWidget):
         self.rating_field.clear()
         self.kid_game_field.clear()
         self.hidden_field.clear()
+        self.release_date.clear()
         self.favorite_field.clear()
         self.publisher_field.clear()
         self.developer_field.clear()
@@ -128,6 +133,7 @@ class GuiManager(QWidget):
         region_label = QLabel("Region")
         players_label = QLabel("Players")
         rating_label = QLabel("Rating")
+        release_date_label = QLabel("Date")
         publisher_label = QLabel("Publisher")
         developer_label = QLabel("Developer")
         genre_label = QLabel("Genre")
@@ -155,6 +161,7 @@ class GuiManager(QWidget):
             self.publisher_field.setText(selected_game.publisher)
             self.developer_field.setText(selected_game.developer)
             self.genre_field.setText(selected_game.genre)
+            self.release_date.setText(Game.convertISOtoDate(selected_game.releaseDate))
             self.description_field.setText(selected_game.desc)
             self.path_field.setText(selected_game.path)
 
@@ -179,7 +186,9 @@ class GuiManager(QWidget):
             # Установка фиксированной ширины
             self.description_field.setFixedHeight(100)
             self.description_field.setWordWrapMode(QTextOption.WordWrap)
-            # self.hbox.addWidget(self.path_field, 16, 1)
+            self.hbox.addWidget(self.path_field, 25, 1)
+            self.hbox.addWidget(release_date_label, 20, 1)
+            self.hbox.addWidget(self.release_date, 21, 1)
 
         if self.save_button:
             self.save_button.clicked.disconnect(self.save_changes)
@@ -207,7 +216,6 @@ class GuiManager(QWidget):
         self.hbox.addWidget(self.find_button)
         self.find_button.clicked.connect(self.show_filtered_games, 0, 2)
 
-
     def add_save_changes_button(self):
         if self.hbox.indexOf(self.save_button) == -1:
             self.save_button = QPushButton('Сохранить изменения')
@@ -222,6 +230,7 @@ class GuiManager(QWidget):
         edited_publisher = self.publisher_field.text()
         edited_developer = self.developer_field.text()
         edited_genre = self.genre_field.text()
+        edited_release_date = self.release_date.text()
         edited_desc = self.description_field.toPlainText()
 
         # Находим соответствующий экземпляр Game по имени из списка
@@ -235,6 +244,7 @@ class GuiManager(QWidget):
         selected_game.developer = edited_developer
         selected_game.genre = edited_genre
         selected_game.desc = edited_desc
+        selected_game.releaseDate = Game.convertDateToISO(edited_release_date)
 
         # Теперь обновляем XML-файл с использованием XmlManager
         XmlManager.write_xml_changes(selected_game)
@@ -266,3 +276,7 @@ class GuiManager(QWidget):
 
         # Установим окно по центру
         self.move(x, y)
+
+    def getDate(self):
+        date = Game.convertISOtoDate(self)
+        return date
