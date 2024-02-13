@@ -7,6 +7,7 @@ from Game import Game
 def read_xml(xml_path):
     tree = ET.parse(xml_path)
     root = tree.getroot()
+
     games_list = []
     for game_element in root.findall('game'):
         game_object = Game(game_element)

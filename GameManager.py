@@ -1,3 +1,5 @@
+import Game
+
 
 class GameManager:
     def __init__(self, xml_data):
@@ -52,14 +54,22 @@ class GameManager:
                 if getattr(game, "video") is None:
                     filtered_games.append(game)
 
-       # elif field == "missing date":
-            #for game in self.games:
-               # if getattr(game, "releasedate") is None:
-                 #   filtered_games.append(game)
+        elif field == "missing date":
+            for game in self.games:
+                date_game = game.releaseDate
+                if date_game is None:
+                    filtered_games.append(game)
 
         elif field == "missing description":
             for game in self.games:
                 if getattr(game, "desc") is None:
+                    filtered_games.append(game)
+
+        elif field == "date":
+            date = Game.convertDateToISO(value)
+            for game in self.games:
+                date_game = game.releaseDate
+                if date_game is not None and date in date_game:
                     filtered_games.append(game)
 
         else:
@@ -69,5 +79,3 @@ class GameManager:
                     if isinstance(attr_value, str) and value in attr_value:
                         filtered_games.append(game)
         self.games = filtered_games
-
-

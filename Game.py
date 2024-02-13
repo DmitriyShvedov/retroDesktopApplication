@@ -1,3 +1,23 @@
+from datetime import datetime
+
+
+def convertDateToISO(data, hour=0, minute=0, second=0):
+    year, month, day = data.split("-")
+    year = int(year)
+    month = int(month)
+    day = int(day)
+    dt = datetime(year, month, day, hour, minute, second)
+    iso_date_string = dt.strftime("%Y%m%dT%H%M%S")
+    return iso_date_string
+
+
+def convertISOtoDate(iso: None):
+    if iso is not None:
+        convert_date = datetime.strptime(iso, '%Y%m%dT%H%M%S')
+        date = convert_date.strftime('%Y-%m-%d')
+        return str(date)
+
+
 class Game:
     def __init__(self, xml_element):
         self.id = xml_element.get('id')
