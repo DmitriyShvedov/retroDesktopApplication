@@ -276,7 +276,3 @@ class GuiManager(QWidget):
 
         # Установим окно по центру
         self.move(x, y)
-
-    def getDate(self):
-        date = Game.convertISOtoDate(self)
-        return date
