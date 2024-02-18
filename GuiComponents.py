@@ -1,8 +1,16 @@
+import os
+
+from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QPixmap
+from PyQt5.QtMultimedia import *
+from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtWidgets import QTabWidget, QWidget, QVBoxLayout, QLabel, QListWidget, QLineEdit, QComboBox, QPushButton, \
     QApplication
 
 from Data import FilterFields
+
+# Получить текущую рабочую директорию
+current_directory = os.getcwd()
 
 
 def get_image():
@@ -16,24 +24,45 @@ def get_image():
     return label
 
 
+def get_video(video_layout, video_widget):
+    # Путь к вашему файлу относительно текущей рабочей директории
+    video_path = os.path.join(current_directory, 'Gals Panic SS Japan - Sega Saturn.mp4')
+
+    # Создаем медиаплеер и настраиваем виджет видео
+    media_player = QMediaPlayer(None, QMediaPlayer.VideoSurface)
+    video_player = QVideoWidget()
+    video_layout.addWidget(video_player)
+
+    # Создаем кнопку для воспроизведения видео
+    play_button = QPushButton("Play")
+    play_button.clicked.connect(lambda: media_player.play())
+    video_layout.addWidget(play_button)
+
+    # Загружаем видео и отображаем виджет
+    media_content = QMediaContent(QUrl.fromLocalFile(video_path))
+    media_player.setMedia(media_content)
+    media_player.setVideoOutput(video_player)
+    video_widget.show()
+
+
 def create_tab_widget():
     # Создаем QTabWidget
     tab_widget = QTabWidget()
     # Создаем вкладки
-    video = QWidget()
+    video_widget = QWidget()
     picture = QWidget()
 
     # Добавляем содержимое на вкладки
-    video_layout = QVBoxLayout(video)
-    video_layout.addWidget(QLabel("Content for Tab 1"))
-    video.setLayout(video_layout)
+    video_layout = QVBoxLayout(video_widget)
+    video_layout.addWidget(get_video(video_layout, video_widget))
+    video_widget.setLayout(video_layout)
 
     picture_layout = QVBoxLayout(picture)
     picture_layout.addWidget(get_image())
     picture.setLayout(picture_layout)
 
     # Добавляем вкладки в QTabWidget
-    tab_widget.addTab(video, "Video")
+    tab_widget.addTab(video_widget, "Video")
     tab_widget.addTab(picture, "Picture")
     return tab_widget
 
