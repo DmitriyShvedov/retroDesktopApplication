@@ -1,19 +1,19 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QTextOption
-from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QFileDialog, QComboBox, QLineEdit, QListWidget, \
-    QListWidgetItem, QApplication, QGridLayout, QTextEdit, QSizePolicy
+from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QFileDialog, QComboBox, QLineEdit, \
+    QListWidgetItem, QGridLayout, QTextEdit, QListWidget
 
 import Game
 import XmlManager
-from Data import FilterFields
 from GameManager import GameManager
+from GuiComponents import create_tab_widget, add_filter_list_fields, add_filter_value_field, add_search_button, center, \
+    add_save_changes_button, add_widget_search_list, clear_layout
 
 
 class GuiManager(QWidget):
 
     def __init__(self, game_manager):
         super().__init__()
-        self.hbox = None
         self.path_field = None
         self.description_field = None
         self.genre_field = None
@@ -46,11 +46,11 @@ class GuiManager(QWidget):
         return f"ID:Name: {self.name}"
 
     def init_ui(self):
-        self.setWindowTitle('OLD SCHOOL')
-        self.open_xml_button = QPushButton('Открыть файл XML')
+        self.setWindowTitle("Information's Retro Games")
+        self.open_xml_button = QPushButton('Open file XML')
 
         self.setGeometry(100, 100, 300, 300)  # Установите размер окна
-        self.center()
+        center(self)
 
         self.hbox = QGridLayout()
         self.hbox.setSpacing(8)
@@ -72,8 +72,9 @@ class GuiManager(QWidget):
         self.genre_field = QLineEdit()
         self.description_field = QTextEdit()
         self.path_field = QLineEdit()
+        self.game_list_widget = QListWidget()
 
-        self.save_button = QPushButton('Сохранить изменения')  # добавьте эту строку
+        self.save_button = QPushButton('Save Changes')  # добавьте эту строку
         self.save_button.clicked.connect(self.save_changes)
 
         self.open_xml_button.clicked.connect(self.open_file_button)
@@ -86,18 +87,18 @@ class GuiManager(QWidget):
             xml_data = XmlManager.read_xml(self.file_path)
             self.original_games = xml_data  # Сохраняем оригинальные данные
             self.game_manager = GameManager(xml_data)
-            self.clear_layout()  # Очистить текущий макет
+            clear_layout(self)  # Очистить текущий макет
 
-            self.add_filter_list_fields()
-            self.add_filter_value_field()
-            self.add_search_button()
-            self.center()
+            add_filter_list_fields(self)
+            add_filter_value_field(self)
+            add_search_button(self)
+            center(self)
 
     def show_filtered_games(self):
         selected_field = self.filter_fields_combo.currentText().lower()
         filter_value = self.filter_value_input.text()
 
-        self.add_widget_search_list()
+        add_widget_search_list(self)
         self.game_list_widget.clear()
 
         # Применяем фильтрацию к оригинальным данным
@@ -137,6 +138,12 @@ class GuiManager(QWidget):
         developer_label = QLabel("Developer")
         genre_label = QLabel("Genre")
         description_label = QLabel("Description")
+        favorite_label = QLabel("Favorite")
+        hidden_label = QLabel("Hidden")
+        kid_game_label = QLabel("Kid Game")
+
+        # Добавляем QTabWidget в QGridLayout
+        self.hbox.addWidget(create_tab_widget(), 0, 4, 9, 7)
 
         # Устанавливаем растягивание столбцов
         self.hbox.setColumnStretch(0, 2)
@@ -146,7 +153,7 @@ class GuiManager(QWidget):
         self.hbox.setColumnStretch(4, 1)
         self.hbox.setColumnStretch(5, 1)
         self.hbox.setColumnStretch(6, 1)
-
+        self.hbox.setColumnStretch(7, 1)
 
         # Находим соответствующий экземпляр Game по имени из списка
         selected_game = next((game for game in self.original_games if game.name == item.text().strip()), None)
@@ -184,6 +191,12 @@ class GuiManager(QWidget):
             self.hbox.addWidget(self.players_field, 16, 3)
             self.hbox.addWidget(rating_label, 15, 4)
             self.hbox.addWidget(self.rating_field, 16, 4)
+            self.hbox.addWidget(kid_game_label, 15, 5)
+            self.hbox.addWidget(self.kid_game_field, 16, 5)
+            self.hbox.addWidget(hidden_label, 15, 6)
+            self.hbox.addWidget(self.hidden_field, 16, 6)
+            self.hbox.addWidget(favorite_label, 15, 7)
+            self.hbox.addWidget(self.favorite_field, 16, 7)
             self.hbox.addWidget(publisher_label, 17, 2)
             self.hbox.addWidget(self.publisher_field, 18, 2, 1, 2)
             self.hbox.addWidget(developer_label, 17, 4)
@@ -202,33 +215,8 @@ class GuiManager(QWidget):
         if self.save_button:
             self.save_button.clicked.disconnect(self.save_changes)
 
-        self.add_save_changes_button()
+        add_save_changes_button(self)
         self.save_button.clicked.connect(self.save_changes)
-
-    def clear_layout(self):
-        for i in reversed(range(self.hbox.count())):
-            widgetItem = self.hbox.itemAt(i)
-            if widgetItem is not None:
-                widgetToRemove = widgetItem.widget()
-                if widgetToRemove is not None:
-                    self.hbox.removeWidget(widgetToRemove)
-                    widgetToRemove.setParent(None)
-
-    def add_widget_search_list(self):
-        # Создаем виджет для отображения списка найденных игр
-        self.game_list_widget = QListWidget(self)
-        self.hbox.addWidget(self.game_list_widget, 2, 0, 23, 2)
-
-    def add_search_button(self):
-        # Создаем кнопку "Найти"
-        self.find_button = QPushButton('Найти')
-        self.hbox.addWidget(self.find_button, 1, 0, 1, 2)
-        self.find_button.clicked.connect(self.show_filtered_games, 0, 2)
-
-    def add_save_changes_button(self):
-        if self.hbox.indexOf(self.save_button) == -1:
-            self.save_button = QPushButton('Сохранить изменения')
-            self.hbox.addWidget(self.save_button, 25, 3, 1, 2)
 
     def save_changes(self):
 
@@ -261,27 +249,3 @@ class GuiManager(QWidget):
         # Обновляем интерфейс, чтобы отобразить актуальные данные
         self.show_filtered_games()
         print("Changes saved successfully.")
-
-    def add_filter_value_field(self):
-        # Создаем поле ввода значения для фильтрации
-        self.filter_value_input = QLineEdit(self)
-        self.filter_value_input.setToolTip("Enter filter value")
-        self.hbox.addWidget(self.filter_value_input, 0, 0)
-
-    def add_filter_list_fields(self):
-        # Создаем выпадающий список для выбора полей для фильтрации
-        self.filter_fields_combo = QComboBox(self)
-        for field in FilterFields:
-            self.filter_fields_combo.addItem(field.value)
-        self.hbox.addWidget(self.filter_fields_combo, 0, 1)
-
-    def center(self):
-        # Получим геометрию основного экрана
-        screen_geometry = QApplication.desktop().screenGeometry()
-
-        # Вычислим центральные координаты окна
-        x = (screen_geometry.width() - self.width()) // 2
-        y = (screen_geometry.height() - self.height()) // 2
-
-        # Установим окно по центру
-        self.move(x, y)
