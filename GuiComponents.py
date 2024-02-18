@@ -24,6 +24,11 @@ def get_image():
     return label
 
 
+
+def hide_button(button, media_player):
+    button.hide()
+    media_player.play()
+
 def get_video(video_layout, video_widget):
     # Получить текущую рабочую директорию
     current_directory = os.getcwd()
@@ -40,8 +45,12 @@ def get_video(video_layout, video_widget):
 
     # Создаем кнопку для воспроизведения видео
     play_button = QPushButton("Play")
-    play_button.clicked.connect(lambda: media_player.play())
+    pause_button = QPushButton("Pause")
     video_layout.addWidget(play_button)
+    video_layout.addWidget(pause_button)
+
+    play_button.clicked.connect(lambda: media_player.play())
+    pause_button.clicked.connect(lambda: media_player.pause())
 
     # Загружаем видео и отображаем виджет
     media_content = QMediaContent(QUrl.fromLocalFile(video_path))
@@ -69,6 +78,7 @@ def create_tab_widget():
     # Добавляем вкладки в QTabWidget
     tab_widget.addTab(video_widget, "Video")
     tab_widget.addTab(picture, "Picture")
+
     return tab_widget
 
 
