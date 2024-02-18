@@ -25,8 +25,13 @@ def get_image():
 
 
 def get_video(video_layout, video_widget):
+    # Получить текущую рабочую директорию
+    current_directory = os.getcwd()
+
+    # Создать путь к файлу в текущей директории
+    file_name = 'Gals Panic SS Japan - Sega Saturn.mp4'
     # Путь к вашему файлу относительно текущей рабочей директории
-    video_path = os.path.join(current_directory, 'Gals Panic SS Japan - Sega Saturn.mp4')
+    video_path = os.path.join(current_directory, file_name)
 
     # Создаем медиаплеер и настраиваем виджет видео
     media_player = QMediaPlayer(None, QMediaPlayer.VideoSurface)
