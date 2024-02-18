@@ -10,6 +10,8 @@ from GuiComponents import create_tab_widget, add_filter_list_fields, add_filter_
     add_save_changes_button, add_widget_search_list, clear_layout
 
 
+
+
 class GuiManager(QWidget):
 
     def __init__(self, game_manager):

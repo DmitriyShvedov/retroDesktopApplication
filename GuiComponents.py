@@ -1,7 +1,19 @@
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QTabWidget, QWidget, QVBoxLayout, QLabel, QListWidget, QLineEdit, QComboBox, QPushButton, \
     QApplication
 
 from Data import FilterFields
+
+
+def get_image():
+    # Путь к вашему изображению
+    image_path = "image.php.png"
+
+    label = QLabel()
+    pixmap = QPixmap(image_path)
+    label.setPixmap(pixmap)
+    label.show()
+    return label
 
 
 def create_tab_widget():
@@ -17,7 +29,7 @@ def create_tab_widget():
     video.setLayout(video_layout)
 
     picture_layout = QVBoxLayout(picture)
-    picture_layout.addWidget(QLabel("Content for Tab 2"))
+    picture_layout.addWidget(get_image())
     picture.setLayout(picture_layout)
 
     # Добавляем вкладки в QTabWidget
