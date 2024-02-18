@@ -14,7 +14,6 @@ class GuiManager(QWidget):
 
     def __init__(self, game_manager):
         super().__init__()
-        self.hbox = None
         self.path_field = None
         self.description_field = None
         self.genre_field = None
@@ -47,8 +46,8 @@ class GuiManager(QWidget):
         return f"ID:Name: {self.name}"
 
     def init_ui(self):
-        self.setWindowTitle('OLD SCHOOL')
-        self.open_xml_button = QPushButton('Открыть файл XML')
+        self.setWindowTitle("Information's Retro Games")
+        self.open_xml_button = QPushButton('Open file XML')
 
         self.setGeometry(100, 100, 300, 300)  # Установите размер окна
         self.center()
@@ -74,7 +73,7 @@ class GuiManager(QWidget):
         self.description_field = QTextEdit()
         self.path_field = QLineEdit()
 
-        self.save_button = QPushButton('Сохранить изменения')  # добавьте эту строку
+        self.save_button = QPushButton('Save Changes')  # добавьте эту строку
         self.save_button.clicked.connect(self.save_changes)
 
         self.open_xml_button.clicked.connect(self.open_file_button)
@@ -234,13 +233,12 @@ class GuiManager(QWidget):
 
     def add_search_button(self):
         # Создаем кнопку "Найти"
-        self.find_button = QPushButton('Найти')
+        self.find_button = QPushButton('Search')
         self.hbox.addWidget(self.find_button, 1, 0, 1, 2)
         self.find_button.clicked.connect(self.show_filtered_games, 0, 2)
 
     def add_save_changes_button(self):
         if self.hbox.indexOf(self.save_button) == -1:
-            self.save_button = QPushButton('Сохранить изменения')
             self.hbox.addWidget(self.save_button, 25, 3, 1, 2)
 
     def save_changes(self):
