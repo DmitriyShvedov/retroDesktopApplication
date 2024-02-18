@@ -7,6 +7,7 @@ import Game
 import XmlManager
 from Data import FilterFields
 from GameManager import GameManager
+from GuiComponents import create_tab_widget
 
 
 class GuiManager(QWidget):
@@ -137,6 +138,12 @@ class GuiManager(QWidget):
         developer_label = QLabel("Developer")
         genre_label = QLabel("Genre")
         description_label = QLabel("Description")
+        favorite_label = QLabel("Favorite")
+        hidden_label = QLabel("Hidden")
+        kid_game_label = QLabel("Kid Game")
+
+        # Добавляем QTabWidget в QGridLayout
+        self.hbox.addWidget(create_tab_widget(), 0, 4, 9, 7)
 
         # Устанавливаем растягивание столбцов
         self.hbox.setColumnStretch(0, 2)
@@ -146,7 +153,7 @@ class GuiManager(QWidget):
         self.hbox.setColumnStretch(4, 1)
         self.hbox.setColumnStretch(5, 1)
         self.hbox.setColumnStretch(6, 1)
-
+        self.hbox.setColumnStretch(7, 1)
 
         # Находим соответствующий экземпляр Game по имени из списка
         selected_game = next((game for game in self.original_games if game.name == item.text().strip()), None)
@@ -184,6 +191,12 @@ class GuiManager(QWidget):
             self.hbox.addWidget(self.players_field, 16, 3)
             self.hbox.addWidget(rating_label, 15, 4)
             self.hbox.addWidget(self.rating_field, 16, 4)
+            self.hbox.addWidget(kid_game_label, 15, 5)
+            self.hbox.addWidget(self.kid_game_field, 16, 5)
+            self.hbox.addWidget(hidden_label, 15, 6)
+            self.hbox.addWidget(self.hidden_field, 16, 6)
+            self.hbox.addWidget(favorite_label, 15, 7)
+            self.hbox.addWidget(self.favorite_field, 16, 7)
             self.hbox.addWidget(publisher_label, 17, 2)
             self.hbox.addWidget(self.publisher_field, 18, 2, 1, 2)
             self.hbox.addWidget(developer_label, 17, 4)
