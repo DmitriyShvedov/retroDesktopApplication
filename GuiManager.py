@@ -1,12 +1,11 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QTextOption
-from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QFileDialog, QComboBox, QLineEdit, QListWidget, \
-    QListWidgetItem, QApplication, QHBoxLayout, QGridLayout, QSizePolicy, QTextEdit
+from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QFileDialog, QComboBox, QLineEdit, QListWidget, \
+    QListWidgetItem, QApplication, QGridLayout, QTextEdit, QSizePolicy
 
 import Game
 import XmlManager
 from Data import FilterFields
-
 from GameManager import GameManager
 
 
@@ -54,7 +53,7 @@ class GuiManager(QWidget):
         self.center()
 
         self.hbox = QGridLayout()
-        self.hbox.setSpacing(10)
+        self.hbox.setSpacing(5)
 
         self.hbox.addWidget(self.open_xml_button, 1, 0)
 
@@ -139,6 +138,16 @@ class GuiManager(QWidget):
         genre_label = QLabel("Genre")
         description_label = QLabel("Description")
 
+        # Устанавливаем растягивание столбцов
+        self.hbox.setColumnStretch(0, 1)
+        self.hbox.setColumnStretch(1, 1)
+        self.hbox.setColumnStretch(2, 1)
+        self.hbox.setColumnStretch(3, 1)
+        self.hbox.setColumnStretch(4, 1)
+        self.hbox.setColumnStretch(5, 1)
+        self.hbox.setColumnStretch(6, 1)
+
+
         # Находим соответствующий экземпляр Game по имени из списка
         selected_game = next((game for game in self.original_games if game.name == item.text().strip()), None)
 
@@ -167,28 +176,28 @@ class GuiManager(QWidget):
 
         # Добавляем QLineEdit в макет, если его еще нет
         if self.hbox.indexOf(self.name_field) == -1:
-            self.hbox.addWidget(name_label, 0, 1)
-            self.hbox.addWidget(self.name_field, 1, 1)
-            self.hbox.addWidget(region_label, 2, 1)
-            self.hbox.addWidget(self.region_field, 3, 1)
-            self.hbox.addWidget(players_label, 4, 1)
-            self.hbox.addWidget(self.players_field, 5, 1)
-            self.hbox.addWidget(rating_label, 6, 1)
-            self.hbox.addWidget(self.rating_field, 7, 1)
-            self.hbox.addWidget(publisher_label, 8, 1)
-            self.hbox.addWidget(self.publisher_field, 9, 1)
-            self.hbox.addWidget(developer_label, 10, 1)
-            self.hbox.addWidget(self.developer_field, 11, 1)
-            self.hbox.addWidget(genre_label, 12, 1)
-            self.hbox.addWidget(self.genre_field, 13, 1)
-            self.hbox.addWidget(description_label, 14, 1)
-            self.hbox.addWidget(self.description_field, 15, 1, 5, 1)
+            self.hbox.addWidget(name_label, 13, 2)
+            self.hbox.addWidget(self.name_field, 14, 2, 1, 2)
+            self.hbox.addWidget(region_label, 13, 4)
+            self.hbox.addWidget(self.region_field, 14, 4)
+            self.hbox.addWidget(players_label, 15, 3)
+            self.hbox.addWidget(self.players_field, 16, 3)
+            self.hbox.addWidget(rating_label, 15, 4)
+            self.hbox.addWidget(self.rating_field, 16, 4)
+            self.hbox.addWidget(publisher_label, 17, 2)
+            self.hbox.addWidget(self.publisher_field, 18, 2)
+            self.hbox.addWidget(developer_label, 17, 4)
+            self.hbox.addWidget(self.developer_field, 18, 4)
+            self.hbox.addWidget(genre_label, 17, 6)
+            self.hbox.addWidget(self.genre_field, 18, 6)
+            self.hbox.addWidget(description_label, 19, 2)
+            self.hbox.addWidget(self.description_field, 20, 2, 5, 6)
             # Установка фиксированной ширины
             self.description_field.setFixedHeight(100)
             self.description_field.setWordWrapMode(QTextOption.WordWrap)
-            self.hbox.addWidget(self.path_field, 25, 1)
-            self.hbox.addWidget(release_date_label, 20, 1)
-            self.hbox.addWidget(self.release_date, 21, 1)
+            self.hbox.addWidget(self.path_field, 25, 0, 1, 2)
+            self.hbox.addWidget(release_date_label, 15, 2)
+            self.hbox.addWidget(self.release_date, 16, 2)
 
         if self.save_button:
             self.save_button.clicked.disconnect(self.save_changes)
@@ -208,18 +217,18 @@ class GuiManager(QWidget):
     def add_widget_search_list(self):
         # Создаем виджет для отображения списка найденных игр
         self.game_list_widget = QListWidget(self)
-        self.hbox.addWidget(self.game_list_widget, 3, 0, 25, 1)
+        self.hbox.addWidget(self.game_list_widget, 2, 0, 23, 2)
 
     def add_search_button(self):
         # Создаем кнопку "Найти"
         self.find_button = QPushButton('Найти')
-        self.hbox.addWidget(self.find_button)
+        self.hbox.addWidget(self.find_button, 1, 0, 1, 2)
         self.find_button.clicked.connect(self.show_filtered_games, 0, 2)
 
     def add_save_changes_button(self):
         if self.hbox.indexOf(self.save_button) == -1:
             self.save_button = QPushButton('Сохранить изменения')
-            self.hbox.addWidget(self.save_button, 27, 1)
+            self.hbox.addWidget(self.save_button, 25, 3, 1, 2)
 
     def save_changes(self):
 
@@ -257,14 +266,14 @@ class GuiManager(QWidget):
         # Создаем поле ввода значения для фильтрации
         self.filter_value_input = QLineEdit(self)
         self.filter_value_input.setToolTip("Enter filter value")
-        self.hbox.addWidget(self.filter_value_input, 1, 0)
+        self.hbox.addWidget(self.filter_value_input, 0, 0)
 
     def add_filter_list_fields(self):
         # Создаем выпадающий список для выбора полей для фильтрации
         self.filter_fields_combo = QComboBox(self)
         for field in FilterFields:
             self.filter_fields_combo.addItem(field.value)
-        self.hbox.addWidget(self.filter_fields_combo, 0, 0)
+        self.hbox.addWidget(self.filter_fields_combo, 0, 1)
 
     def center(self):
         # Получим геометрию основного экрана
