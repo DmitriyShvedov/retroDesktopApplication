@@ -53,7 +53,7 @@ class GuiManager(QWidget):
         self.center()
 
         self.hbox = QGridLayout()
-        self.hbox.setSpacing(5)
+        self.hbox.setSpacing(8)
 
         self.hbox.addWidget(self.open_xml_button, 1, 0)
 
@@ -139,8 +139,8 @@ class GuiManager(QWidget):
         description_label = QLabel("Description")
 
         # Устанавливаем растягивание столбцов
-        self.hbox.setColumnStretch(0, 1)
-        self.hbox.setColumnStretch(1, 1)
+        self.hbox.setColumnStretch(0, 2)
+        self.hbox.setColumnStretch(1, 2)
         self.hbox.setColumnStretch(2, 1)
         self.hbox.setColumnStretch(3, 1)
         self.hbox.setColumnStretch(4, 1)
@@ -185,11 +185,11 @@ class GuiManager(QWidget):
             self.hbox.addWidget(rating_label, 15, 4)
             self.hbox.addWidget(self.rating_field, 16, 4)
             self.hbox.addWidget(publisher_label, 17, 2)
-            self.hbox.addWidget(self.publisher_field, 18, 2)
+            self.hbox.addWidget(self.publisher_field, 18, 2, 1, 2)
             self.hbox.addWidget(developer_label, 17, 4)
-            self.hbox.addWidget(self.developer_field, 18, 4)
+            self.hbox.addWidget(self.developer_field, 18, 4, 1, 2)
             self.hbox.addWidget(genre_label, 17, 6)
-            self.hbox.addWidget(self.genre_field, 18, 6)
+            self.hbox.addWidget(self.genre_field, 18, 6, 1, 2)
             self.hbox.addWidget(description_label, 19, 2)
             self.hbox.addWidget(self.description_field, 20, 2, 5, 6)
             # Установка фиксированной ширины
